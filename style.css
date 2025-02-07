@@ -1,0 +1,682 @@
+/* -----------------------------
+   CSS Reset & Base
+----------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* -----------------------------
+   Custom Properties
+----------------------------- */
+:root {
+    --bg: #111111;
+    --navy: #1a1b2e;
+    --text: #ffffff;
+    --spacing: clamp(0.5rem, 2vw, 2rem);
+    
+    /* Colors */
+    --gold: #DBA642;
+    --orange: #C85F45;
+    --red: #B43B35;
+    --magenta: #7E1850;
+    --purple: #3F1670;
+    --navy-dark: #040A66;
+    
+    /* Common values */
+    --border-light: 1px solid rgba(255,255,255,0.1);
+    --bg-translucent: rgba(255,255,255,0.05);
+}
+
+/* -----------------------------
+   Typography
+----------------------------- */
+@font-face {
+    font-family: 'Radwave';
+    src: url('fonts/RadwaveFont_Regular.woff2') format('woff2'),
+         url('fonts/RadwaveFont_Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Radwave Outline';
+    src: url('fonts/RadwaveFont_Outline.woff2') format('woff2'),
+         url('fonts/RadwaveFont_Outline.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* -----------------------------
+   Base Styles
+----------------------------- */
+body {
+    font-family: 'Space Mono', monospace;
+    line-height: 1.6;
+    color: var(--text);
+    background: url('bg.jpg') center/cover fixed no-repeat;
+    position: relative;
+}
+
+section {
+    padding: calc(var(--spacing) * 2);
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+section:not(.hero) {
+    background: var(--navy) url('noise.png') repeat;
+}
+
+.noise {
+    background: url('noise.png') repeat;
+    position: fixed;
+    z-index: 100;
+    top: -50%;
+    left: -50%;
+    right: -50%;
+    bottom: -50%;
+    width: 150%;
+    height: 200vh;
+    opacity: 0.12;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+}
+
+/* -----------------------------
+   Navigation
+----------------------------- */
+.main-nav {
+    position: absolute;
+    right: 2rem;
+    bottom: 30px;
+    z-index: 3;
+    display: flex;
+    gap: 2rem;
+}
+
+.main-nav a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.2s;
+    padding: 0.5rem 0;
+    opacity: 0.8;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.main-nav a:hover {
+    opacity: 1;
+    color: var(--gold);
+}
+
+/* -----------------------------
+   Hero Section
+----------------------------- */
+.hero {
+    min-height: 420px;
+    position: relative;
+    padding-top: 2rem;
+    overflow: hidden;
+}
+
+section.hero {
+    padding-right: 0;
+    padding-bottom: 0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.hero img {
+    width: auto;
+    height: 300px;
+    object-fit: contain;
+    margin-bottom: -60px;
+    transform: rotate(-5deg) scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.hero-text {
+    text-align: left;
+}
+
+.name-container {
+    display: flex;
+    gap: 0.5rem;
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    line-height: 1;
+    margin-bottom: 0;
+}
+
+.name-outline {
+    font-family: 'Radwave Outline';
+}
+
+.name-solid {
+    font-family: 'Radwave';
+    color: white;
+}
+
+.subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    color: var(--text);
+    letter-spacing: 0.1em;
+    opacity: 0.9;
+}
+
+.rainbow-bar {
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 90px;
+    background: linear-gradient(
+        180deg,
+        var(--gold) 0%,
+        var(--gold) 16.66%,
+        var(--orange) 16.66%,
+        var(--orange) 33.33%,
+        var(--red) 33.33%,
+        var(--red) 50%,
+        var(--magenta) 50%,
+        var(--magenta) 66.66%,
+        var(--purple) 66.66%,
+        var(--purple) 83.33%,
+        var(--navy-dark) 83.33%,
+        var(--navy-dark) 100%
+    );
+}
+
+.rainbow-bar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('noise.png') repeat;
+    opacity: 0.2;
+    mix-blend-mode: overlay;
+}
+
+.hero-cta {
+    margin-left: auto;
+}
+
+.hero-cta, .cta-button {
+    display: inline-block;
+    background: var(--gold);
+    color: black;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-top: 1rem;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.hero-cta:hover, .cta-button:hover {
+    background: var(--orange);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* -----------------------------
+   Social Icons
+----------------------------- */
+.social-icons {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    fill: white;
+    transition: transform 0.2s;
+}
+
+.social-icon:hover {
+    transform: translateY(-2px);
+}
+
+/* -----------------------------
+   Section Headers
+----------------------------- */
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.section-header svg {
+    width: 32px;
+    height: 32px;
+    fill: var(--gold);
+}
+
+.section-title {
+    font-family: 'Radwave';
+    font-size: 2rem;
+    text-align: center;
+    color: white;
+}
+
+/* -----------------------------
+   Shows Section
+----------------------------- */
+.shows {
+    display: grid;
+    gap: var(--spacing);
+}
+
+.show-card {
+    background: var(--bg-translucent);
+    padding: var(--spacing);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--spacing);
+    border: var(--border-light);
+    transition: all 0.2s;
+    backdrop-filter: blur(10px);
+}
+
+.show-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255,255,255,0.1);
+}
+
+.date {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.venue {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.venue-meta {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.show-details {
+    grid-column: 1 / -1;
+    background: rgba(255,255,255,0.02);
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.detail-link, .detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: inherit;
+    text-decoration: none;
+}
+
+.detail-link:hover {
+    color: var(--gold);
+}
+
+.detail-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.show-description {
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+/* No Shows State */
+.no-shows {
+    text-align: center;
+    padding: 3rem;
+    background: var(--bg-translucent);
+    border: var(--border-light);
+}
+
+.no-shows h3 {
+    font-family: 'Radwave';
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--gold);
+}
+
+.no-shows p {
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.8;
+}
+
+.no-shows-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+/* -----------------------------
+   Video Section
+----------------------------- */
+.video-section {
+    max-width: 1200px;
+    padding: 3rem 5rem;
+    margin: 0 auto;
+}
+
+.promo-video {
+    aspect-ratio: 16/9;
+    width: 100%;
+    margin: 2rem 0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.promo-description {
+    text-align: center;
+    max-width: 800px;
+    margin: 3rem auto 1rem;
+    opacity: 0.8;
+}
+
+.promo-description button {
+    margin-top: 1rem;
+}
+
+.promo-description button a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* -----------------------------
+   Booking Form
+----------------------------- */
+.booking-form {
+    background: var(--bg-translucent);
+    padding: 2rem;
+    border-radius: 4px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+    margin-top: 1.5rem;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.booking-form input,
+.booking-form textarea {
+    background: var(--bg-translucent);
+    border: var(--border-light);
+    padding: 0.75rem;
+    border-radius: 4px;
+    color: white;
+    font-family: inherit;
+}
+
+.booking-form input:focus,
+.booking-form textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+
+.form-submit {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+#form-status {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+#form-status.success {
+    color: #4BB543;
+}
+
+#form-status.error {
+    color: #ff3333;
+}
+
+/* -----------------------------
+   Newsletter
+----------------------------- */
+.newsletter-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    background: var(--bg-translucent);
+    padding: 2rem;
+    border-radius: 4px;
+}
+
+.newsletter-content p {
+    margin-bottom: 2rem;
+    opacity: 0.8;
+}
+
+.newsletter-signup {
+    width: 480px;
+    height: 320px;
+    border: var(--border-light);
+    background: var(--bg-translucent);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.about-content p {
+    margin-bottom: 30px;
+}
+
+.about-content {
+    text-align: center;
+}
+
+/* -----------------------------
+   Buttons
+----------------------------- */
+button {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--text);
+    padding: 0.5rem 1rem;
+    font: inherit;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+button:hover {
+    background: var(--orange);
+    border-color: var(--orange);
+}
+
+.form-submit button {
+    background: var(--gold);
+    color: black;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 4px;
+}
+
+.form-submit button:hover {
+    background: var(--orange);
+    color: white;
+}
+
+/* -----------------------------
+   Media Queries
+----------------------------- */
+@media (max-width: 768px) {
+    .hero {
+        min-height: 260px;
+    }
+
+    .hero-content {
+        flex-direction: row;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .hero img {
+        height: 180px;
+        margin-bottom: -30px;
+    }
+
+    .hero-text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .name-container {
+        font-size: clamp(1.5rem, 5vw, 2rem);
+        gap: 0.25rem;
+    }
+
+    .subtitle {
+        font-size: 0.8rem;
+    }
+
+    .social-icons {
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .social-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .hero-cta {
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.9rem;
+    }
+
+    .rainbow-bar {
+        height: 60px;
+    }
+
+    .show-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 1rem;
+        margin-bottom: 40px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .newsletter-signup {
+        width: 100%;
+        height: 280px;
+    }
+
+    .main-nav {
+        width: 100%;
+        right: 0;
+        left: 0;
+        margin: 0 auto;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        height: 10px;
+    }
+
+    .video-section {
+        padding: 2rem 1rem;
+    }
+
+    section {
+        padding: 20px 30px !important;
+    }
+
+    .about-content {
+        text-align: center;
+    }
+
+    p {
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero img {
+        height: 200px;
+    }
+
+    a.hero-cta {
+        display: none;
+    }
+
+    .hero-text {
+        margin-left: -50px;
+        margin-top: -30px;
+    }
+
+    .name-container {
+        font-size: clamp(1.8rem, 7vw, 2.5rem);
+    }
+
+    section {
+        padding: var(--spacing);
+    }
+}
