@@ -1,0 +1,19 @@
+   <section id="newsletter">
+     
+        <div class="newsletter-content">
+            <p>Want to stay updated on when and where I'll be playing around Indianapolis? Sign up for my newsletter and get notified whenever new shows are added to the calendar. No spam, just music.</p>
+            
+            <div class="newsletter-signup-placeholder" style="height: 150px">
+                <script>
+                    window.addEventListener('load', function() {
+                        document.querySelector('.newsletter-signup-placeholder').innerHTML = `
+                            <iframe src="https://tommydaymusic.substack.com/embed" width="480" height="150" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe>
+
+                        `;
+                    });
+                </script>
+            </div>
+
+
+        </div>
+    </section>
