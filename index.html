@@ -7,6 +7,7 @@
     <link rel="preload" href="fonts/RadwaveFont_Outline.woff2" as="font" type="font/woff2" crossorigin>
     <meta name="description" content="Tommy Day - Indianapolis-based singer-songwriter with 20 years of live music experience performing at venues across Indiana.">
     <title>Tommy Day - Indianapolis Singer-Songwriter</title>
+    <script src="https://cdn.jsdelivr.net/npm/@justinribeiro/lite-youtube@1.5.0/lite-youtube.js" type="module"></script>
     <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
     <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
@@ -44,8 +45,11 @@
     <section id="promo" class="video-section">
         <div class="promo-video">
 
-            <iframe loading="lazy" width="100%" height="100%" src="https://www.youtube.com/embed/YbtUu4FRyJ0?si=-56llHRxOxVxp7GA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
+            <lite-youtube 
+                videoid="YbtUu4FRyJ0"
+                style="background-image: url('https://i.ytimg.com/vi/YbtUu4FRyJ0/hqdefault.jpg');">
+            </lite-youtube>
+            
         </div>
 
         <div class="promo-description">
@@ -84,7 +88,17 @@
         <div class="newsletter-content">
             <p>Want to stay updated on when and where I'll be playing around Indianapolis? Sign up for my newsletter and get notified whenever new shows are added to the calendar. No spam, just music.</p>
             
-            <iframe src="https://tommydaymusic.substack.com/embed" width="480" height="150" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe>
+            <div class="newsletter-signup-placeholder" style="height: 150px">
+                <script>
+                    window.addEventListener('load', function() {
+                        document.querySelector('.newsletter-signup-placeholder').innerHTML = `
+                            <iframe src="https://tommydaymusic.substack.com/embed" width="480" height="150" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe>
+
+                        `;
+                    });
+                </script>
+            </div>
+
 
         </div>
     </section>
