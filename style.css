@@ -407,6 +407,7 @@ section.hero {
     margin: 2rem 0;
     border-radius: 4px;
     overflow: hidden;
+    min-height: 315px;
 }
 
 .promo-video lite-youtube {
@@ -524,6 +525,7 @@ section.hero {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 315px;
 }
 
 .about-content p {
