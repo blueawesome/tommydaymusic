@@ -502,6 +502,7 @@ section.hero {
     background: var(--bg-translucent);
     padding: 2rem;
     border-radius: 4px;
+    display: none;
 }
 
 .newsletter-content p {
@@ -564,6 +565,15 @@ button:hover {
 /* -----------------------------
    Media Queries
 ----------------------------- */
+
+@media (min-width: 1000px) {
+
+    .newsletter-content {
+        display: block;
+    }
+
+}   
+
 @media (max-width: 768px) {
     .hero {
         min-height: 260px;
