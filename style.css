@@ -57,7 +57,11 @@ body {
     font-family: 'Space Mono', monospace;
     line-height: 1.6;
     color: var(--text);
-    background: url('bg.jpg') center/cover fixed no-repeat;
+    background-image: url('bg.webp');
+    background-size: contain;
+    @supports not (background-image: url('bg.webp')) {
+        background-image: url('bg.jpg');
+    }
     position: relative;
 }
 
