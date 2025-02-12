@@ -2,16 +2,6 @@
   "displayMode": "shows",
   "shows": [
     {
-      "id": "1739379221675",
-      "venue": "Parkside Public House",
-      "date": "2025-03-21",
-      "time": "19:00",
-      "location": "Indianapolis, IN",
-      "venueUrl": "https://parksidepublichouse.com/",
-      "description": "2602 Shelby St, Indianapolis, IN 46203",
-      "status": "draft"
-    },
-    {
       "id": "1739379242034",
       "venue": "Parkside Public House",
       "date": "2025-03-21",
@@ -20,36 +10,6 @@
       "venueUrl": "https://parksidepublichouse.com/",
       "description": "2602 Shelby St, Indianapolis, IN 46203",
       "status": "draft"
-    },
-    {
-      "id": "1739379221675",
-      "venue": "Turner's Bar",
-      "date": "2025-03-28",
-      "time": "17:00",
-      "location": "Indianapolis, IN",
-      "venueUrl": "",
-      "description": "",
-      "status": "draft"
-    },
-    {
-      "id": "1739379221675",
-      "venue": "Applebees",
-      "date": "2025-05-05",
-      "time": "17:00",
-      "location": "Indianapolis, IN",
-      "venueUrl": "",
-      "description": "",
-      "status": "draft"
-    },
-    {
-      "id": "1739379221675",
-      "venue": "Test Venue",
-      "date": "2025-05-05",
-      "time": "17:00",
-      "location": "Indianapolis, IN",
-      "venueUrl": "",
-      "description": "This is just a test",
-      "status": "published"
     }
   ]
 }
