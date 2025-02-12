@@ -20,6 +20,16 @@
       "venueUrl": "https://parksidepublichouse.com/",
       "description": "2602 Shelby St, Indianapolis, IN 46203",
       "status": "draft"
+    },
+    {
+      "id": "1739379221675",
+      "venue": "Turner's Bar",
+      "date": "2025-03-28",
+      "time": "17:00",
+      "location": "Indianapolis, IN",
+      "venueUrl": "",
+      "description": "",
+      "status": "draft"
     }
   ]
 }
