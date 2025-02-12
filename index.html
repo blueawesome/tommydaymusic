@@ -69,23 +69,14 @@
             <svg class="amp-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M139.6 51.9C168.3 27.2 210.1 0 256 0s87.7 27.2 116.4 51.9c4.8 4.1 9.3 8.2 13.4 12.1L448 64c35.3 0 64 28.7 64 64l0 128 0 16 0 16 0 160c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 288l0-16 0-16L0 128C0 92.7 28.7 64 64 64l62.2 0c4.2-4 8.7-8.1 13.4-12.1zm36 12.1l160.8 0C312.1 46 284 32 256 32s-56.1 14-80.4 32zM480 288L32 288l0 160c0 17.7 14.3 32 32 32l384 0c17.7 0 32-14.3 32-32l0-160zm0-32l0-128c0-17.7-14.3-32-32-32L64 96c-17.7 0-32 14.3-32 32l0 128 448 0zM80 336a16 16 0 1 1 32 0 16 16 0 1 1 -32 0zm0 96a16 16 0 1 1 32 0 16 16 0 1 1 -32 0zm48-64a16 16 0 1 1 0 32 16 16 0 1 1 0-32zm16-32a16 16 0 1 1 32 0 16 16 0 1 1 -32 0zm16 80a16 16 0 1 1 0 32 16 16 0 1 1 0-32zm16-32a16 16 0 1 1 32 0 16 16 0 1 1 -32 0zm48-64a16 16 0 1 1 0 32 16 16 0 1 1 0-32zM208 432a16 16 0 1 1 32 0 16 16 0 1 1 -32 0zm48-64a16 16 0 1 1 0 32 16 16 0 1 1 0-32zm16-32a16 16 0 1 1 32 0 16 16 0 1 1 -32 0zm16 80a16 16 0 1 1 0 32 16 16 0 1 1 0-32zm16-32a16 16 0 1 1 32 0 16 16 0 1 1 -32 0zm80-16a16 16 0 1 1 0 32 16 16 0 1 1 0-32zm-48-32a16 16 0 1 1 32 0 16 16 0 1 1 -32 0zm80-16a16 16 0 1 1 0 32 16 16 0 1 1 0-32zM336 432a16 16 0 1 1 32 0 16 16 0 1 1 -32 0zm80-16a16 16 0 1 1 0 32 16 16 0 1 1 0-32zM96 152a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm72 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm152-24a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm72 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"/></svg>
             <h2 class="section-title">Upcoming Shows</h2>
         </div>
-        <div class="shows">
-            <!-- Active Shows Here -->
-            
 
-            <!-- No shows notice (commented out when there are shows) -->
-            <div class="no-shows">
-                <h3>No Shows Currently Scheduled</h3>
-                <p>Want to see me play at your favorite spot? Send them my promo video! Venue owners can use the booking form below to get in touch.</p>
-                <div class="no-shows-buttons">
-                    <button onclick="document.getElementById('promo').scrollIntoView()">Watch Promo</button>
-                    <button onclick="document.getElementById('booking').scrollIntoView()">Book Now</button>
-                </div>
-            </div>
 
-           
-
+         <!-- Add id="shows-container" here -->
+        <div id="shows-container" class="shows">
+            <!-- Content will be dynamically loaded -->
         </div>
+
+       
     </section>
 
     <section id="about">
@@ -212,6 +203,77 @@
     });
 
 
+</script>
+
+<script>
+    async function loadShows() {
+        try {
+            const response = await fetch('shows.json');
+            const data = await response.json();
+            const container = document.getElementById('shows-container');
+            
+            if (data.displayMode === 'no-shows') {
+                container.innerHTML = `
+                    <div class="no-shows">
+                        <h3>No Shows Currently Scheduled</h3>
+                        <p>Want to see me play at your favorite spot? Send them my promo video! Venue owners can use the booking form below to get in touch.</p>
+                        <div class="no-shows-buttons">
+                            <button onclick="document.getElementById('promo').scrollIntoView()">Watch Promo</button>
+                            <button onclick="document.getElementById('booking').scrollIntoView()">Book Now</button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Filter out drafts and past shows
+            const activeShows = data.shows.filter(show => 
+                show.status === 'published' && 
+                new Date(show.date) >= new Date()
+            );
+
+            if (activeShows.length === 0) {
+                // Show the no-shows message even if displayMode is 'shows' but there are no active shows
+                container.innerHTML = `
+                    <div class="no-shows">
+                        <h3>No Shows Currently Scheduled</h3>
+                        <p>Want to see me play at your favorite spot? Send them my promo video! Venue owners can use the booking form below to get in touch.</p>
+                        <div class="no-shows-buttons">
+                            <button onclick="document.getElementById('promo').scrollIntoView()">Watch Promo</button>
+                            <button onclick="document.getElementById('booking').scrollIntoView()">Book Now</button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Format date helper function
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric'
+                });
+            }
+
+            // Render active shows
+            container.innerHTML = activeShows.map(show => `
+                <div class="show-card">
+                    <div class="date">${formatDate(show.date)}</div>
+                    <div class="details">
+                        <div class="venue">${show.venue}</div>
+                        <div class="venue-meta">${show.location} • ${show.time}</div>
+                    </div>
+                    ${show.venueUrl ? `<a href="${show.venueUrl}" target="_blank" class="venue-link">Details</a>` : ''}
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error loading shows:', error);
+        }
+    }
+
+    // Load shows when page loads
+    window.addEventListener('load', loadShows);
 </script>
 
 </html>

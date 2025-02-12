@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #DBA642;
+            --primary-dark: #C85F45;
+            --bg: #111111;
+            --surface: #1a1b2e;
+            --text: #ffffff;
+            --text-secondary: rgba(255,255,255,0.7);
+            --border: rgba(255,255,255,0.1);
+            --spacing: 1rem;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            line-height: 1.5;
+            color: var(--text);
+            background: var(--bg);
+        }
+
+        .admin-wrap {
+            max-width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-header {
+            background: var(--surface);
+            padding: var(--spacing);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-header h1 {
+            font-size: 1.25rem;
+            margin: 0 0 1rem;
+        }
+
+        .tab-nav {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .tab {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 99px;
+            font: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: black;
+        }
+
+        .tab[disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .admin-content {
+            flex: 1;
+            padding: var(--spacing);
+        }
+
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+
+        .primary {
+            background: var(--primary);
+            color: black;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            font: inherit;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .display-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: auto;
+        }
+
+        .display-toggle select {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.5rem;
+            border-radius: 4px;
+            font: inherit;
+        }
+
+        .shows-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .show-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .show-status {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .draft {
+            color: var(--primary);
+        }
+
+        .show-info h3 {
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .show-info p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin: 0.25rem 0 0;
+        }
+
+        .show-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .icon {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text);
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            font-size: 1.25rem;
+            padding: 0;
+        }
+
+        .icon:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            place-items: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: grid;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.75rem;
+            border-radius: 4px;
+            font: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            font: inherit;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-wrap">
+        <header class="admin-header">
+            <h1>Manage Site</h1>
+            <nav class="tab-nav">
+                <button class="tab active">Shows</button>
+                <button class="tab" disabled>Media</button>
+                <button class="tab" disabled>About</button>
+            </nav>
+        </header>
+        
+        <main class="admin-content">
+            <div class="action-bar">
+                <button class="primary" onclick="showModal('new')">+ New Show</button>
+                <div class="display-toggle">
+                    <label>Display Mode:</label>
+                    <select onchange="updateDisplayMode(this.value)">
+                        <option value="shows">Show Events</option>
+                        <option value="no-shows">No Shows Message</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="shows-list">
+                <div class="show-card">
+                    <div class="show-status">
+                        <span class="draft">Draft</span>
+                    </div>
+                    <div class="show-info">
+                        <h3>Parkside Public House</h3>
+                        <p>Feb 14 • 8:00 PM</p>
+                    </div>
+                    <div class="show-actions">
+                        <button class="icon" onclick="showModal('edit')">📝</button>
+                        <button class="icon" onclick="cloneShow()">📋</button>
+                        <button class="icon" onclick="deleteShow()">🗑️</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- New/Edit Show Modal -->
+    <div class="modal" id="showModal">
+        <div class="modal-content">
+            <h2>Add New Show</h2>
+            <form class="form-grid" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="venue">Venue Name</label>
+                    <input type="text" id="venue" required>
+                </div>
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="time">Time</label>
+                    <input type="time" id="time" required>
+                </div>
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" placeholder="City, State" required>
+                </div>
+                <div class="form-group">
+                    <label for="venue-url">Venue Website (Optional)</label>
+                    <input type="url" id="venue-url">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description (Optional)</label>
+                    <textarea id="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="draft"> Save as draft
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="secondary" onclick="hideModal()">Cancel</button>
+                    <button type="submit" class="primary">Save Show</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Show/Hide Modal
+        function showModal(type) {
+            document.getElementById('showModal').classList.add('active');
+        }
+
+        function hideModal() {
+            document.getElementById('showModal').classList.remove('active');
+        }
+
+        // Form Handling
+        function handleSubmit(event) {
+            event.preventDefault();
+            // TODO: Save show data
+            hideModal();
+        }
+
+        function cloneShow() {
+            // TODO: Clone show functionality
+        }
+
+        function deleteShow() {
+            if (confirm('Are you sure you want to delete this show?')) {
+                // TODO: Delete show functionality
+            }
+        }
+
+        function updateDisplayMode(mode) {
+            // TODO: Update display mode
+            console.log('Display mode:', mode);
+        }
+
+        // Close modal if clicking outside
+        document.getElementById('showModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) hideModal();
+        });
+    </script>
+</body>
+</html>
