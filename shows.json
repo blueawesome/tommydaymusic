@@ -10,6 +10,16 @@
       "venueUrl": "https://parksidepublichouse.com/",
       "description": "2602 Shelby St, Indianapolis, IN 46203",
       "status": "draft"
+    },
+    {
+      "id": "1739381576399",
+      "venue": "Test Show",
+      "date": "2025-05-05",
+      "time": "17:00",
+      "location": "Indianapolis, IN",
+      "venueUrl": "https://www.gainbridgefieldhouse.com/",
+      "description": "125 S Pennsylvania St, Indianapolis, IN 46204",
+      "status": "published"
     }
   ]
 }
