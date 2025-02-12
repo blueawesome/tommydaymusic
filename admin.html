@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Site Admin</title>
+    <script src="config.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -339,6 +340,9 @@
 
         function hideModal() {
             document.getElementById('showModal').classList.remove('active');
+             // Clear form
+            document.getElementById('showModal').dataset.editingId = '';
+            document.querySelector('.form-grid').reset();
         }
 
         // Form Handling
@@ -367,6 +371,317 @@
         document.getElementById('showModal').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) hideModal();
         });
+
+
+        const GITHUB_TOKEN = config.GITHUB_TOKEN;
+        const REPO = 'blueawesome/tommydaymusic';
+        const BRANCH = 'main';
+
+        async function saveToGithub(content) {
+            // Get current file SHA (required for update)
+            const currentFile = await fetch(`https://api.github.com/repos/${REPO}/contents/shows.json`, {
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`
+                }
+            }).then(r => r.json());
+
+            // Update file
+            await fetch(`https://api.github.com/repos/${REPO}/contents/shows.json`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: 'Update shows data',
+                    content: btoa(JSON.stringify(content, null, 2)),
+                    sha: currentFile.sha,
+                    branch: BRANCH
+                })
+            });
+        }
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+            const editingId = document.getElementById('showModal').dataset.editingId;
+            
+            try {
+                // Get current shows
+                const response = await fetch(`https://api.github.com/repos/${REPO}/contents/shows.json`, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`
+                    }
+                });
+                const fileInfo = await response.json();
+                const data = JSON.parse(atob(fileInfo.content));
+                
+                const formData = {
+                    id: editingId || Date.now().toString(),
+                    venue: document.getElementById('venue').value,
+                    date: document.getElementById('date').value,
+                    time: document.getElementById('time').value,
+                    location: document.getElementById('location').value,
+                    venueUrl: document.getElementById('venue-url').value,
+                    description: document.getElementById('description').value,
+                    status: document.getElementById('draft').checked ? 'draft' : 'published'
+                };
+
+                if (editingId) {
+                    // Update existing show
+                    const index = data.shows.findIndex(show => show.id === editingId);
+                    if (index !== -1) {
+                        data.shows[index] = formData;
+                    }
+                } else {
+                    // Add new show
+                    data.shows.push(formData);
+                }
+                
+                // Sort shows by date
+                data.shows.sort((a, b) => new Date(a.date) - new Date(b.date));
+                
+                // Save to GitHub
+                await fetch(`https://api.github.com/repos/${REPO}/contents/shows.json`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: editingId ? 'Update show' : 'Add new show',
+                        content: btoa(JSON.stringify(data, null, 2)),
+                        sha: fileInfo.sha,
+                        branch: BRANCH
+                    })
+                });
+
+                hideModal();
+                loadShows();
+            } catch (error) {
+                console.error('Error saving show:', error);
+            }
+        }
+
+        async function saveShow(formData) {
+            try {
+                // Get current file content
+                const response = await fetch(`https://api.github.com/repos/${REPO}/contents/shows.json`, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`
+                    }
+                });
+                const fileInfo = await response.json();
+                
+                // Decode current content
+                const currentContent = JSON.parse(atob(fileInfo.content));
+                
+                // Add new show
+                currentContent.shows.push({
+                    id: Date.now().toString(),
+                    ...formData,
+                    status: document.getElementById('draft').checked ? 'draft' : 'published'
+                });
+                
+                // Sort shows by date
+                currentContent.shows.sort((a, b) => new Date(a.date) - new Date(b.date));
+                
+                // Update file
+                await fetch(`https://api.github.com/repos/${REPO}/contents/shows.json`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: 'Update shows data',
+                        content: btoa(JSON.stringify(currentContent, null, 2)),
+                        sha: fileInfo.sha,
+                        branch: BRANCH
+                    })
+                });
+
+                return true;
+            } catch (error) {
+                console.error('Error saving show:', error);
+                return false;
+            }
+        }
+
+        // Add this to your admin.html script section
+
+        // Load and display existing shows
+        async function loadShows() {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${REPO}/contents/shows.json`, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`
+                    }
+                });
+                const fileInfo = await response.json();
+                const data = JSON.parse(atob(fileInfo.content));
+                
+                const showsList = document.querySelector('.shows-list');
+                showsList.innerHTML = data.shows.map(show => `
+                    <div class="show-card" data-id="${show.id}">
+                        <div class="show-status">
+                            <span class="${show.status}">${show.status}</span>
+                        </div>
+                        <div class="show-info">
+                            <h3>${show.venue}</h3>
+                            <p>${new Date(show.date).toLocaleDateString()} • ${show.time}</p>
+                        </div>
+                        <div class="show-actions">
+                            <button class="icon" onclick="editShow('${show.id}')">📝</button>
+                            <button class="icon" onclick="cloneShow('${show.id}')">📋</button>
+                            <button class="icon" onclick="deleteShow('${show.id}')">🗑️</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading shows:', error);
+            }
+        }
+
+        // Edit show
+        async function editShow(id) {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${REPO}/contents/shows.json`, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`
+                    }
+                });
+                const fileInfo = await response.json();
+                const data = JSON.parse(atob(fileInfo.content));
+                
+                const show = data.shows.find(s => s.id === id);
+                if (show) {
+                    document.getElementById('venue').value = show.venue;
+                    document.getElementById('date').value = show.date;
+                    document.getElementById('time').value = show.time;
+                    document.getElementById('location').value = show.location;
+                    document.getElementById('venue-url').value = show.venueUrl || '';
+                    document.getElementById('description').value = show.description || '';
+                    document.getElementById('draft').checked = show.status === 'draft';
+                    
+                    // Store editing ID
+                    document.getElementById('showModal').dataset.editingId = id;
+                    showModal('edit');
+                }
+            } catch (error) {
+                console.error('Error editing show:', error);
+            }
+        }
+
+        // Clone show
+        async function cloneShow(id) {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${REPO}/contents/shows.json`, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`
+                    }
+                });
+                const fileInfo = await response.json();
+                const data = JSON.parse(atob(fileInfo.content));
+                
+                const show = data.shows.find(s => s.id === id);
+                if (show) {
+                    const clonedShow = {
+                        ...show,
+                        id: Date.now().toString(),
+                        status: 'draft'
+                    };
+                    
+                    data.shows.push(clonedShow);
+                    
+                    await fetch(`https://api.github.com/repos/${REPO}/contents/shows.json`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${GITHUB_TOKEN}`,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: 'Clone show',
+                            content: btoa(JSON.stringify(data, null, 2)),
+                            sha: fileInfo.sha,
+                            branch: BRANCH
+                        })
+                    });
+                    
+                    loadShows();
+                }
+            } catch (error) {
+                console.error('Error cloning show:', error);
+            }
+        }
+
+        // Delete show
+        async function deleteShow(id) {
+            if (!confirm('Are you sure you want to delete this show?')) return;
+            
+            try {
+                const response = await fetch(`https://api.github.com/repos/${REPO}/contents/shows.json`, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`
+                    }
+                });
+                const fileInfo = await response.json();
+                const data = JSON.parse(atob(fileInfo.content));
+                
+                data.shows = data.shows.filter(show => show.id !== id);
+                
+                await fetch(`https://api.github.com/repos/${REPO}/contents/shows.json`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: 'Delete show',
+                        content: btoa(JSON.stringify(data, null, 2)),
+                        sha: fileInfo.sha,
+                        branch: BRANCH
+                    })
+                });
+                
+                loadShows();
+            } catch (error) {
+                console.error('Error deleting show:', error);
+            }
+        }
+
+        // Update handleSubmit to handle both new and edit
+        async function handleSubmit(event) {
+            event.preventDefault();
+            const editingId = document.getElementById('showModal').dataset.editingId;
+            
+            const formData = {
+                venue: document.getElementById('venue').value,
+                date: document.getElementById('date').value,
+                time: document.getElementById('time').value,
+                location: document.getElementById('location').value,
+                venueUrl: document.getElementById('venue-url').value,
+                description: document.getElementById('description').value,
+                status: document.getElementById('draft').checked ? 'draft' : 'published'
+            };
+
+            if (editingId) {
+                // Editing existing show
+                formData.id = editingId;
+            } else {
+                // New show
+                formData.id = Date.now().toString();
+            }
+
+            const success = await saveShow(formData);
+            if (success) {
+                hideModal();
+                loadShows();
+            }
+        }
+
+        // Load shows when page loads
+        window.addEventListener('load', loadShows);
+
     </script>
 </body>
 </html>
