@@ -2,16 +2,6 @@
   "displayMode": "no-shows",
   "shows": [
     {
-      "id": "1739379208940",
-      "venue": "Parkside Public House",
-      "date": "2025-03-21",
-      "time": "19:00",
-      "location": "Indianapolis, IN",
-      "venueUrl": "https://parksidepublichouse.com/",
-      "description": "2602 Shelby St, Indianapolis, IN 46203",
-      "status": "draft"
-    },
-    {
       "id": "1739379221675",
       "venue": "Parkside Public House",
       "date": "2025-03-21",
