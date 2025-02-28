@@ -10,6 +10,16 @@
       "venueUrl": "https://parksidepublichouse.com/",
       "description": "2602 Shelby St, Indianapolis, IN 46203",
       "status": "draft"
+    },
+    {
+      "id": "1739379242035",
+      "venue": "Private Event (Date Booked)",
+      "date": "2025-05-10",
+      "time": "19:00",
+      "location": "Indianapolis, IN",
+      "venueUrl": "",
+      "description": "",
+      "status": "published"
     }
   ]
 }
