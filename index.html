@@ -260,7 +260,9 @@
 
             // Format date helper function
             function formatDate(dateString) {
-                const date = new Date(dateString);
+                // Ensure consistent date handling by adding time to avoid timezone issues
+                const [year, month, day] = dateString.split('-');
+                const date = new Date(Number(year), Number(month) - 1, Number(day));
                 return date.toLocaleDateString('en-US', { 
                     month: 'short', 
                     day: 'numeric'
