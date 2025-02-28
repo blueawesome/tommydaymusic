@@ -269,13 +269,25 @@
                 });
             }
 
+            function formatTime(timeString) {
+                // Parse the time in 24-hour format (HH:MM)
+                const [hours, minutes] = timeString.split(':').map(Number);
+                
+                // Convert to 12-hour format
+                const period = hours >= 12 ? 'PM' : 'AM';
+                const hour12 = hours % 12 || 12; // Convert 0 to 12
+                
+                // Format as "7:00 PM"
+                return `${hour12}:${minutes.toString().padStart(2, '0')} ${period}`;
+            }
+
             // Render active shows
             container.innerHTML = activeShows.map(show => `
                 <div class="show-card">
                     <div class="date">${formatDate(show.date)}</div>
                     <div class="details">
                         <div class="venue">${show.venue}</div>
-                        <div class="venue-meta">${show.location} • ${show.time}</div>
+                        <div class="venue-meta">${show.location} • ${formatTime(show.time)}</div>
                     </div>
                     ${show.venueUrl ? `<a href="${show.venueUrl}" target="_blank" class="venue-link">Details</a>` : ''}
                 </div>
