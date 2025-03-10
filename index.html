@@ -83,8 +83,24 @@
 
 
          <!-- Add id="shows-container" here -->
-        <div id="shows-container" class="shows">
-            <!-- Content will be dynamically loaded -->
+        <div class="shows">
+
+            <div class="show-card">
+                <div class="date">May 10</div>
+                <div class="details">
+                    <div class="venue">Garfield Park Farmer's Market</div>
+                    <div class="venue-meta">Indianapolis, IN • 10:00 AM - 12:00 PM</div>
+                </div>
+            </div>
+
+            <div class="show-card">
+                <div class="date">May 17</div>
+                <div class="details">
+                    <div class="venue">Private Event (Date Booked)</div>
+                    <div class="venue-meta">Indianapolis, IN • 7:00 PM</div>
+                </div>
+            </div>
+            
         </div>
 
        
@@ -214,91 +230,6 @@
     });
 
 
-</script>
-
-<script>
-    async function loadShows() {
-        try {
-            const response = await fetch('shows.json');
-            const data = await response.json();
-            const container = document.getElementById('shows-container');
-            
-            if (data.displayMode === 'no-shows') {
-                container.innerHTML = `
-                    <div class="no-shows">
-                        <h3>No Shows Currently Scheduled</h3>
-                        <p>Want to see me play at your favorite spot? Send them my promo video! Venue owners can use the booking form below to get in touch.</p>
-                        <div class="no-shows-buttons">
-                            <button onclick="document.getElementById('promo').scrollIntoView()">Watch Promo</button>
-                            <button onclick="document.getElementById('booking').scrollIntoView()">Book Now</button>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            // Filter out drafts and past shows
-            const activeShows = data.shows.filter(show => 
-                show.status === 'published' && 
-                new Date(show.date) >= new Date()
-            );
-
-            if (activeShows.length === 0) {
-                // Show the no-shows message even if displayMode is 'shows' but there are no active shows
-                container.innerHTML = `
-                    <div class="no-shows">
-                        <h3>No Shows Currently Scheduled</h3>
-                        <p>Want to see me play at your favorite spot? Send them my promo video! Venue owners can use the booking form below to get in touch.</p>
-                        <div class="no-shows-buttons">
-                            <button onclick="document.getElementById('promo').scrollIntoView()">Watch Promo</button>
-                            <button onclick="document.getElementById('booking').scrollIntoView()">Book Now</button>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            // Format date helper function
-            function formatDate(dateString) {
-                // Ensure consistent date handling by adding time to avoid timezone issues
-                const [year, month, day] = dateString.split('-');
-                const date = new Date(Number(year), Number(month) - 1, Number(day));
-                return date.toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric'
-                });
-            }
-
-            function formatTime(timeString) {
-                // Parse the time in 24-hour format (HH:MM)
-                const [hours, minutes] = timeString.split(':').map(Number);
-                
-                // Convert to 12-hour format
-                const period = hours >= 12 ? 'PM' : 'AM';
-                const hour12 = hours % 12 || 12; // Convert 0 to 12
-                
-                // Format as "7:00 PM"
-                return `${hour12}:${minutes.toString().padStart(2, '0')} ${period}`;
-            }
-
-            // Render active shows
-            container.innerHTML = activeShows.map(show => `
-                <div class="show-card">
-                    <div class="date">${formatDate(show.date)}</div>
-                    <div class="details">
-                        <div class="venue">${show.venue}</div>
-                        <div class="venue-meta">${show.location} • ${formatTime(show.time)}</div>
-                    </div>
-                    ${show.venueUrl ? `<a href="${show.venueUrl}" target="_blank" class="venue-link">Details</a>` : ''}
-                </div>
-            `).join('');
-        } catch (error) {
-            console.error('Error loading shows:', error);
-        }
-    }
-
-    // Load shows when page loads
-    window.addEventListener('load', loadShows);
 </script>
 
 </html>
