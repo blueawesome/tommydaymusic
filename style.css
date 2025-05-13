@@ -683,6 +683,11 @@ button:hover {
         right: 1rem;
         z-index: 5;
     }
+
+    .section-title {
+        font-size: 1.2rem;
+       
+    }
 }
 
 @media (max-width: 480px) {
