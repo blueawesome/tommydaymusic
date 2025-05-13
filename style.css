@@ -620,6 +620,10 @@ button:hover {
         padding-top: 0;
     }
 
+    .promo-video {
+        min-height: 200px;
+    }
+
     .main-nav {
         position: absolute;
         left: auto;
@@ -660,6 +664,33 @@ button:hover {
 
     .promo-description, .promo-video {
         margin-top: 0;
+    }
+
+    .video-section {
+        padding: 20px 30px;
+        max-width: 96%;
+    }
+
+    .show-card {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+
+    }
+
+    .show-card .venue {
+        font-size: 1.1rem;
+    }
+
+    .show-card .venue-meta {
+        margin-bottom: 5px;
+    }
+
+    .shows {
+    margin-bottom: 30px;}
+
+    .show-card a.venue-link {
+        margin-bottom: 5px;
     }
 
     /* Make social icons prominent on mobile */
